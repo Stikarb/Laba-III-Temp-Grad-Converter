@@ -2,25 +2,42 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Конвертер температур</title>
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>Конвертер температур</h1>
-        <form method="POST" action="/convert">
+    <div class="glass-container">
+        <h1>🌡️ Конвертер температур</h1>
+        <form class="converter-form" method="POST" action="/convert">
             <div class="input-group">
-                <label for="temperature">Температура:</label>
-                <input type="number" id="temperature" name="temperature" required step="0.01">
+                <label class="input-label">Введите значение</label>
+                <input 
+                    type="number" 
+                    class="input-field"
+                    name="temperature" 
+                    placeholder="0.00" 
+                    required 
+                    step="0.01"
+                >
             </div>
-            <div class="input-group">
-                <label>Направление:</label>
-                <div>
-                    <input type="radio" name="direction" value="CtoF" checked> Цельсий → Фаренгейт<br>
-                    <input type="radio" name="direction" value="FtoC"> Фаренгейт → Цельсий
-                </div>
+
+            <div class="radio-grid">
+                <input type="radio" id="c-to-f" name="direction" value="CtoF" checked>
+                <label for="c-to-f" class="radio-card">
+                    <div class="radio-icon"></div>
+                    <span>°C → °F</span>
+                </label>
+
+                <input type="radio" id="f-to-c" name="direction" value="FtoC">
+                <label for="f-to-c" class="radio-card">
+                    <div class="radio-icon"></div>
+                    <span>°F → °C</span>
+                </label>
             </div>
-            <input type="submit" value="Конвертировать">
+
+            <button type="submit" class="submit-btn">Конвертировать →</button>
         </form>
     </div>
 </body>
