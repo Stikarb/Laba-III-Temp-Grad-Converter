@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конвертер температур</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Конвертер температур</h1>
+        
+        <div class="converter">
+            <div class="input-group">
+                <label for="celsius">Цельсий (°C)</label>
+                <input type="number" id="celsius" placeholder="Введите температуру" oninput="convertToFahrenheit()">
+            </div>
+            
+            <div class="input-group">
+                <label for="fahrenheit">Фаренгейт (°F)</label>
+                <input type="number" id="fahrenheit" placeholder="Введите температуру" oninput="convertToCelsius()">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function convertToFahrenheit() {
+            const celsius = document.getElementById('celsius').value;
+            if (celsius === '') {
+                document.getElementById('fahrenheit').value = '';
+                return;
+            }
+            const fahrenheit = (celsius * 9/5) + 32;
+            document.getElementById('fahrenheit').value = fahrenheit.toFixed(2);
+        }
+
+        function convertToCelsius() {
+            const fahrenheit = document.getElementById('fahrenheit').value;
+            if (fahrenheit === '') {
+                document.getElementById('celsius').value = '';
+                return;
+            }
+            const celsius = (fahrenheit - 32) * 5/9;
+            document.getElementById('celsius').value = celsius.toFixed(2);
+        }
+    </script>
+</body>
+</html>
