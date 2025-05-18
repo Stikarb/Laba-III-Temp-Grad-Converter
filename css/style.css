@@ -1,65 +1,192 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
+:root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --background: #0f172a;
+    --glass: rgba(255, 255, 255, 0.05);
+    --text: #f8fafc;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+* {
     margin: 0;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: linear-gradient(45deg, #1e293b, #0f172a);
     min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    color: var(--text);
 }
 
-.container {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    max-width: 500px;
+.glass-container {
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
     width: 100%;
+    max-width: 500px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow);
 }
 
-h1 {
-    color: #1a73e8;
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.converter {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.converter-form {
+    display: grid;
+    gap: 1.5rem;
 }
 
 .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    position: relative;
 }
 
-label {
-    font-weight: bold;
-    color: #5f6368;
+.input-label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+    opacity: 0.9;
 }
 
-input {
-    padding: 12px;
-    border: 2px solid #dadce0;
-    border-radius: 6px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
+.input-field {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    color: var(--text);
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
 }
 
-input:focus {
+.input-field:focus {
     outline: none;
-    border-color: #1a73e8;
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.1);
 }
 
-input::-webkit-inner-spin-button,
-input::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+.radio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
 }
 
-input[type=number] {
-    -moz-appearance: textfield;
+.radio-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid transparent;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.radio-card:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateY(-2px);
+}
+
+.radio-card input {
+    display: none;
+}
+
+.radio-card label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+}
+
+.radio-icon {
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+}
+
+.radio-icon::after {
+    content: "";
+    width: 12px;
+    height: 12px;
+    background: var(--primary);
+    border-radius: 50%;
+    opacity: 0;
+    transition: 0.3s ease;
+}
+
+input:checked + .radio-card {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.15);
+}
+
+input:checked + .radio-card .radio-icon::after {
+    opacity: 1;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1.25rem;
+    background: linear-gradient(45deg, var(--primary), #818cf8);
+    border: none;
+    border-radius: 0.75rem;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+}
+
+.result-message,
+.error-message {
+    padding: 2rem;
+    border-radius: 1rem;
+    margin: 2rem 0;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.result-message {
+    background: rgba(99, 102, 241, 0.1);
+    border: 2px solid var(--primary);
+}
+
+.error-message {
+    background: rgba(239, 68, 68, 0.1);
+    border: 2px solid #ef4444;
+}
+
+.back-btn {
+    display: block;
+    width: fit-content;
+    margin: 1rem auto;
+    color: var(--primary);
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.back-btn:hover {
+    opacity: 0.8;
+}
+
+@media (max-width: 480px) {
+    .glass-container {
+        padding: 1.5rem;
+        border-radius: 1rem;
+    }
+    
+    .radio-grid {
+        grid-template-columns: 1fr;
+    }
 }
