@@ -2,47 +2,26 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Конвертер температур</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Конвертер температур</h1>
-        
-        <div class="converter">
+        <form method="POST" action="/convert">
             <div class="input-group">
-                <label for="celsius">Цельсий (°C)</label>
-                <input type="number" id="celsius" placeholder="Введите температуру" oninput="convertToFahrenheit()">
+                <label for="temperature">Температура:</label>
+                <input type="number" id="temperature" name="temperature" required step="0.01">
             </div>
-            
             <div class="input-group">
-                <label for="fahrenheit">Фаренгейт (°F)</label>
-                <input type="number" id="fahrenheit" placeholder="Введите температуру" oninput="convertToCelsius()">
+                <label>Направление:</label>
+                <div>
+                    <input type="radio" name="direction" value="CtoF" checked> Цельсий → Фаренгейт<br>
+                    <input type="radio" name="direction" value="FtoC"> Фаренгейт → Цельсий
+                </div>
             </div>
-        </div>
+            <input type="submit" value="Конвертировать">
+        </form>
     </div>
-
-    <script>
-        function convertToFahrenheit() {
-            const celsius = document.getElementById('celsius').value;
-            if (celsius === '') {
-                document.getElementById('fahrenheit').value = '';
-                return;
-            }
-            const fahrenheit = (celsius * 9/5) + 32;
-            document.getElementById('fahrenheit').value = fahrenheit.toFixed(2);
-        }
-
-        function convertToCelsius() {
-            const fahrenheit = document.getElementById('fahrenheit').value;
-            if (fahrenheit === '') {
-                document.getElementById('celsius').value = '';
-                return;
-            }
-            const celsius = (fahrenheit - 32) * 5/9;
-            document.getElementById('celsius').value = celsius.toFixed(2);
-        }
-    </script>
 </body>
 </html>
