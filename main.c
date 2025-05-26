@@ -13,12 +13,15 @@ static int process_request(struct mg_connection *c, struct mg_http_message *hm) 
     int error_code = 0;
 
     // Обработка CSS
-    if (mg_strcmp(hm->uri, mg_str("/css/styles.css")) == 0) {
+    if (mg_strcmp(hm->uri, mg_str("/css/style.css")) == 0) {
         response = read_file(PATH_CSS_STYLES);
-        if (response) {
+        if (response != NULL) {
             mg_http_reply(c, 200, CONTENT_TYPE_CSS, "%s", response);
+        } else {
+            error_code = 1;
         }
-        goto cleanup;
+        free(response);
+        return error_code;
     }
 
     // Обработка /convert
@@ -35,26 +38,31 @@ static int process_request(struct mg_connection *c, struct mg_http_message *hm) 
             } else {
                 float result = convert_temp(temp, direction);
                 char *result_template = read_file(PATH_RESULT_HTML);
-                char dynamic_html[512];
-                const char *input_scale = (strcmp(direction, "CtoF") == 0) ? "C" : "F";
-                const char *output_scale = (strcmp(direction, "CtoF") == 0) ? "F" : "C";
-                snprintf(dynamic_html, sizeof(dynamic_html), result_template, temp_str, input_scale, result, output_scale);
-                response = strdup(dynamic_html);
-                free(result_template);
+                if (result_template != NULL) {
+                    char dynamic_html[512];
+                    const char *input_scale = (strcmp(direction, "CtoF") == 0) ? "C" : "F";
+                    const char *output_scale = (strcmp(direction, "CtoF") == 0) ? "F" : "C";
+                    snprintf(dynamic_html, sizeof(dynamic_html), result_template, 
+                           temp_str, input_scale, result, output_scale);
+                    response = strdup(dynamic_html);
+                    free(result_template);
+                } else {
+                    error_code = 1;
+                }
             }
         } else {
             response = read_file(PATH_CONVERT_HTML);
         }
     }
 
-    if (response) {
+    // Формирование ответа
+    if (response != NULL) {
         mg_http_reply(c, 200, CONTENT_TYPE_HTML, "%s", response);
     } else {
         mg_http_reply(c, 500, CONTENT_TYPE_HTML, "Internal Server Error");
         error_code = 1;
     }
 
-cleanup:
     free(response);
     return error_code;
 }
