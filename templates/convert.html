@@ -9,12 +9,13 @@
 <body>
     <div class="glass-container">
         <h1>🌡️ Конвертер температур</h1>
-        <form class="converter-form" method="POST" action="/convert">
+        <form class="converter-form" onsubmit="return convertTemperature(event)">
             <div class="input-group">
                 <label class="input-label">Введите значение</label>
                 <input 
                     type="number" 
                     class="input-field"
+                    id="temperature"
                     name="temperature" 
                     placeholder="0.00" 
                     required 
@@ -38,6 +39,50 @@
 
             <button type="submit" class="submit-btn">Конвертировать →</button>
         </form>
+
+        <!-- Блок для вывода результата -->
+        <div id="resultContainer" class="result-message" style="display: none;">
+            <span id="resultText"></span>
+            <a href="#" onclick="clearResult()" class="back-btn">← Новый расчёт</a>
+        </div>
     </div>
+
+    <script>
+        function convertTemperature(event) {
+            event.preventDefault(); // Отмена отправки формы
+
+            // Получение данных
+            const tempInput = parseFloat(document.getElementById("temperature").value);
+            const direction = document.querySelector('input[name="direction"]:checked').value;
+
+            // Валидация
+            if (isNaN(tempInput)) {
+                alert("Введите корректное число!");
+                return;
+            }
+
+            // Вычисление
+            let result;
+            if (direction === "CtoF") {
+                result = (tempInput * 9/5 + 32).toFixed(2);
+            } else {
+                result = ((tempInput - 32) * 5/9).toFixed(2);
+            }
+
+            // Форматирование вывода
+            const inputScale = (direction === "CtoF") ? "C" : "F";
+            const outputScale = (direction === "CtoF") ? "F" : "C";
+            const resultText = `${tempInput}°${inputScale} = ${result}°${outputScale}`;
+
+            // Отображение результата
+            document.getElementById("resultText").textContent = resultText;
+            document.getElementById("resultContainer").style.display = "block";
+        }
+
+        function clearResult() {
+            document.getElementById("resultContainer").style.display = "none";
+            document.getElementById("temperature").value = "";
+        }
+    </script>
 </body>
 </html>
