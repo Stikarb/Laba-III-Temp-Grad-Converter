@@ -9,17 +9,17 @@ static int process_request(struct mg_connection *c, struct mg_http_message *hm) 
     char *response = NULL;
 
     // Отдача статических файлов
-    if (mg_strcmp(hm->uri, mg_str("/css/style.css")) == 0) {
+    if (mg_strcmp(hm->uri, mg_str(URL_CSS_STYLES)) == 0) {
         response = read_file(PATH_CSS_STYLES);
         mg_http_reply(c, 200, CONTENT_TYPE_CSS, "%s", response ? response : "");
     } 
-    else if (mg_strcmp(hm->uri, mg_str("/convert")) == 0) {
+    else if (mg_strcmp(hm->uri, mg_str(URL_CONVERT)) == 0) {
         response = read_file(PATH_CONVERT_HTML);
         mg_http_reply(c, 200, CONTENT_TYPE_HTML, "%s", response ? response : "");
     }
     else {
         // Для корневого пути перенаправляем на /convert
-        mg_http_reply(c, 302, "Location: /convert\n", "");
+        mg_http_reply(c, 302, "Location: " URL_CONVERT "\n", "");
     }
 
     free(response);
