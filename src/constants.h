@@ -2,13 +2,11 @@
 #define CONSTANTS_H
 
 // Директории
-#define DIR_TEMPLATES "./templates/"
-#define DIR_CSS       "./css/"
+#define DIR_TEMPLATES "../templates/"
+#define DIR_CSS       DIR_TEMPLATES "css/"
 
 // Пути к файлам
 #define PATH_CONVERT_HTML   DIR_TEMPLATES "convert.html"
-#define PATH_RESULT_HTML    DIR_TEMPLATES "result.html"
-#define PATH_ERROR_HTML     DIR_TEMPLATES "error.html"
 #define PATH_CSS_STYLES     DIR_CSS "style.css"
 
 // HTTP-заголовки

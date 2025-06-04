@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -I. -Imongoose -Iinput
+CFLAGS = -Wall -Wextra -I../ -I -Imongoose -Iinput
 SRC = main.c mongoose/mongoose.c input/input.c
 TARGET = server
 
