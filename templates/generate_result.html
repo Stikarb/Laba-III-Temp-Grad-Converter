@@ -1,0 +1,15 @@
+static char* generate_result_html(const char* result_text) {
+    const char* template = "<!DOCTYPE html><html lang=\"ru\"><head>"
+        "<meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
+        "<title>Результат конвертации</title><link href=\"/css/style.css\" rel=\"stylesheet\"></head>"
+        "<body><div class=\"glass-container\"><h1>🌡️ Результат конвертации</h1>"
+        "<div class=\"result-message\"><span id=\"resultText\">%s</span><br>"
+        "<small style=\"opacity:0.7;\">Кэш: последние %d вычислений хранятся %d минут</small><br>"
+        "<a href=\"/convert\" class=\"back-btn\">← Новый расчёт</a></div></div></body></html>";
+    
+    char* html = malloc(strlen(template) + strlen(result_text) + 100);
+    if (html) {
+        sprintf(html, template, result_text, CACHE_SIZE, CACHE_EXPIRY_MINUTES);
+    }
+    return html;
+}

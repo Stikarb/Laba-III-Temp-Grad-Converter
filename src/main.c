@@ -5,6 +5,56 @@
 #include <string.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <time.h>
+
+// Структура для элемента кэша
+typedef struct {
+    double temperature;
+    char direction[10];
+    double result;
+    char from_unit[2];
+    char to_unit[2];
+    time_t timestamp;
+} CacheItem;
+
+// Кэш
+static CacheItem cache[CACHE_SIZE];
+static int cache_count = 0;
+
+// Проверка кэша на наличие результата
+static CacheItem* check_cache(double temperature, const char* direction) {
+    time_t now = time(NULL);
+    for (int i = 0; i < cache_count; i++) {
+        // Проверяем соответствие параметров и время жизни
+        if (cache[i].temperature == temperature && 
+            strcmp(cache[i].direction, direction) == 0 &&
+            difftime(now, cache[i].timestamp) < CACHE_EXPIRY_MINUTES * 60) {
+            return &cache[i];
+        }
+    }
+    return NULL;
+}
+
+// Добавление результата в кэш
+static void add_to_cache(double temperature, const char* direction, 
+                         double result, const char* from_unit, const char* to_unit) {
+    time_t now = time(NULL);
+    
+    // Если кэш заполнен, удаляем самый старый элемент
+    if (cache_count >= CACHE_SIZE) {
+        memmove(&cache[0], &cache[1], sizeof(CacheItem) * (CACHE_SIZE - 1));
+        cache_count--;
+    }
+    
+    // Добавляем новый элемент
+    CacheItem* item = &cache[cache_count++];
+    item->temperature = temperature;
+    strncpy(item->direction, direction, sizeof(item->direction));
+    item->result = result;
+    strncpy(item->from_unit, from_unit, sizeof(item->from_unit));
+    strncpy(item->to_unit, to_unit, sizeof(item->to_unit));
+    item->timestamp = now;
+}
 
 // Функция для конвертации температуры (без изменений)
 static void convert_temperature(double value, const char* direction, 
@@ -56,15 +106,29 @@ static int process_request(struct mg_connection *c, struct mg_http_message *hm) 
         
         // Проверка и конвертация
         if (sscanf(temp_str, "%lf", &temp_value) == 1) {
-            convert_temperature(temp_value, direction, &result, &from_unit, &to_unit);
+            // Проверяем кэш
+            CacheItem* cached = check_cache(temp_value, direction);
+            if (cached) {
+                // Используем кэшированный результат
+                char result_text[100];
+                snprintf(result_text, sizeof(result_text), "%.2f°%s = %.2f°%s (из кэша)", 
+                        cached->temperature, cached->from_unit, cached->result, cached->to_unit);
+                response = generate_result_html(result_text);
+            } else {
+                // Вычисляем новый результат
+                convert_temperature(temp_value, direction, &result, &from_unit, &to_unit);
+                // Добавляем в кэш
+                add_to_cache(temp_value, direction, result, from_unit, to_unit);
+                
+                // Форматирование результата
+                char result_text[100];
+                snprintf(result_text, sizeof(result_text), "%.2f°%s = %.2f°%s", 
+                        temp_value, from_unit, result, to_unit);
+                
+                // Генерация HTML с результатом
+                response = generate_result_html(result_text);
+            }
             
-            // Форматирование результата
-            char result_text[100];
-            snprintf(result_text, sizeof(result_text), "%.2f°%s = %.2f°%s", 
-                    temp_value, from_unit, result, to_unit);
-            
-            // Генерация HTML с результатом
-            response = generate_result_html(result_text);
             mg_http_reply(c, 200, CONTENT_TYPE_HTML, "%s", response ? response : "");
         } else {
             // Ошибка ввода

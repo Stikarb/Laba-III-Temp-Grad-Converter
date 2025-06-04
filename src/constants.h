@@ -19,4 +19,8 @@
 #define URL_CONVERT        "/convert"
 #define URL_ROOT           "/"
 
+// Настройки кэша
+#define CACHE_SIZE 10
+#define CACHE_EXPIRY_MINUTES 10
+
 #endif
