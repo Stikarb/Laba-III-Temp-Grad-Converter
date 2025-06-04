@@ -7,6 +7,7 @@
 
 // Пути к файлам
 #define PATH_CONVERT_HTML   DIR_TEMPLATES "convert.html"
+#define PATH_ERROR_HTML     DIR_TEMPLATES "error.html"
 #define PATH_CSS_STYLES     DIR_CSS "style.css"
 
 // HTTP-заголовки
