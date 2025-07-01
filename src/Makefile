@@ -1,13 +1,18 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -I../ -I -Imongoose -Iinput
-LDFLAGS = -lmongoose -lrt
-SRC = main.c mongoose/mongoose.c input/input.c
-TARGET = server
+CFLAGS = -I. -lpthread
+SRC = input/input.c main.c mongoose/mongoose.c
+TARGET = temp_converter
+TEMPLATES_DIR = templates
 
 all: $(TARGET)
 
 $(TARGET): $(SRC)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) -o $@ $^ $(CFLAGS)
+
+run: $(TARGET)
+	./$(TARGET)
 
 clean:
 	rm -f $(TARGET)
+
+.PHONY: all run clean
